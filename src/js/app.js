@@ -1,70 +1,18 @@
 /* global jQuery, initials, _, githubApi, markdown */
-
+ $(function(){
 (function ($, initials, _, githubApi) {
   'use strict';
 
+//will probably change this to work with more variables instead of regular expressions
   var repoUrl = 'https://github.com/gr2m/milestones';
   var repoUsername = repoUrl.match(/github.com\/([^\/]+)/).pop();
   var repoName = repoUrl.match(/github.com\/[^\/]+\/([^\/]+)/).pop();
-  var rowTemplate = '';
-  rowTemplate += '<tr class="<%= isNewMilestone ? "newMilestone" : "" %>">\n';
-  rowTemplate += '    <% if (isNewMilestone) { %>\n';
-  rowTemplate += '    <th class="milestone" rowspan="<%= numMilestoneIssues %>">\n';
-  rowTemplate += '        <% if (milestoneAssignee) { %>\n';
-  rowTemplate += '        <div class="pull-right">\n';
-  rowTemplate += '          <a href="<%= milestoneAssignee.html_url %>">\n';
-  rowTemplate += '              <img src="<%= milestoneAssignee.avatar_url %>&s=24" alt="<%= milestoneAssignee.login %>">\n';
-  rowTemplate += '          </a>\n';
-  rowTemplate += '        </div>\n';
-  rowTemplate += '        <% } %>\n';
-  rowTemplate += '        <strong><%= milestoneTitle %></strong>\n';
-  rowTemplate += '        <small><%= markdownToHTML(milestoneDescription) %></small>\n';
-  rowTemplate += '    </th>\n';
-  rowTemplate += '    <% } %>\n';
-  rowTemplate += '    <td class="task" data-nr="<%= number %>">\n';
-  rowTemplate += '        <div class="pull-right">\n';
-  rowTemplate += '          <% if (assignee && state === "active") { %>\n';
-  rowTemplate += '          <a href="<%= assignee.html_url %>">\n';
-  rowTemplate += '              <img src="<%= assignee.avatar_url %>&s=24" alt="<%= assignee.login %>">\n';
-  rowTemplate += '          </a>\n';
-  rowTemplate += '          <% } %>\n';
-  rowTemplate += '          <% if (effort === undefined) { %>\n';
-  rowTemplate += '          <span class="label label-danger">unrated</span>\n';
-  rowTemplate += '          <% } else {%>\n';
-  rowTemplate += '          <div title="effort: <%= effort %>" class="progress" style="width: <%= effort * 2 %>0px">\n';
-  rowTemplate += '            <% if (state !== "open") { %>\n';
-  rowTemplate += '            <div class="progress-bar <%= state === "active" ? "progress-bar-striped active" : "" %>"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>\n';
-  rowTemplate += '            <% } %>\n';
-  rowTemplate += '          </div>\n';
-  rowTemplate += '          <% } %>\n';
-  rowTemplate += '        </div>\n';
-  rowTemplate += '        <strong>\n';
-  rowTemplate += '            <%= title %>\n';
-  rowTemplate += '            <% if (subtasks) { %>\n';
-  rowTemplate += '            (<%= subtasks.closed %>/<%= subtasks.open + subtasks.closed %>)\n';
-  rowTemplate += '            <% } %>\n';
-  rowTemplate += '            <a href="<%= html_url %>">\n';
-  rowTemplate += '              #<%= number %>\n';
-  rowTemplate += '            </a>\n';
-  rowTemplate += '        </strong>\n';
-  rowTemplate += '        <small>\n';
-  rowTemplate += '          <%= markdownToHTML(body) %>\n';
-  rowTemplate += '          <a class="btn btn-default btn-xs" href="<%= html_url %>">\n';
-  rowTemplate += '            open on GitHub\n';
-  rowTemplate += '          </a>\n';
-  rowTemplate += '        </small>\n';
-  rowTemplate += '    </td>\n';
-  rowTemplate += '</tr>';
 
-  var progressTemplate = '';
-  progressTemplate += '<div title="<%= total %>" class="progress-group <% if (preceding > 50) { %>over50percent<% } %>" style="width: <%= total %>%;">';
-  progressTemplate += '  <div class="progress-bar" style="width: <%= closedPercent %>%"></div>';
-  progressTemplate += '  <div class="progress-bar progress-bar-striped active" style="width: <%= activePercent %>%"></div>';
-  progressTemplate += '  <div class="progress-bar progress-bar-danger" style="width: <%= unratedPercent %>%"></div>';
-  progressTemplate += '  <div class="progress-bar invisible" style="width: <%= openPercent %>%;"></div>';
-  progressTemplate += '  <div class="progress-group-label"><%= title %></div>';
-  progressTemplate += '</div>';
+  //declarations of functions, still not sure if I need these or not
+  var rowTemplate = $("#row-template");
+  var progressTemplate = $(#"#progress-bar");
 
+ // gonna move this closer to where it's actually used
   var stateMap = {
     'open': 0,
     'active': 1,
@@ -216,7 +164,7 @@
     renderTasks(milestones);
   }
 
-
+// the chart at the top of the page - will reduce responsabilities
   function renderChart(milestones) {
     var currentTotal = 0;
     var allTotal;
@@ -325,6 +273,8 @@
     summaryHtml += '</div>\n';
     $('.chart').append(summaryHtml);
   }
+
+
   function renderTasks(milestones) {
     var htmlLines = [];
     milestones.forEach(function(milestone) {
@@ -435,3 +385,4 @@
     return html;
   }
 })(jQuery, initials, _, githubApi, markdown);
+})

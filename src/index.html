@@ -52,10 +52,72 @@
     Made by the <a href="http://hood.ie">Hoodie Community</a>.
   </p>
 
+<script id="row-template" type="text/template">
+  <tr class="<%= isNewMilestone ? "newMilestone" : "" %>">
+      <% if (isNewMilestone) { %>
+      <th class="milestone" rowspan="<%= numMilestoneIssues %>">
+          <% if (milestoneAssignee) { %>
+          <div class="pull-right">
+            <a href="<%= milestoneAssignee.html_url %>">
+                <img src="<%= milestoneAssignee.avatar_url %>&s=24" alt="<%= milestoneAssignee.login %>">
+            </a>
+          </div>
+          <% } %>
+          <strong><%= milestoneTitle %></strong>
+          <small><%= markdownToHTML(milestoneDescription) %></small>
+      </th>
+      <% } %>
+      <td class="task" data-nr="<%= number %>">
+          <div class="pull-right">
+            <% if (assignee && state === "active") { %>
+            <a href="<%= assignee.html_url %>">
+                <img src="<%= assignee.avatar_url %>&s=24" alt="<%= assignee.login %>">
+            </a>
+            <% } %>
+            <% if (effort === undefined) { %>
+            <span class="label label-danger">unrated</span>
+            <% } else {%>
+            <div title="effort: <%= effort %>" class="progress" style="width: <%= effort * 2 %>0px">
+              <% if (state !== "open") { %>
+              <div class="progress-bar <%= state === "active" ? "progress-bar-striped active" : "" %>"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+              <% } %>
+            </div>
+            <% } %>
+          </div>
+          <strong>
+              <%= title %>
+              <% if (subtasks) { %>
+              (<%= subtasks.closed %>/<%= subtasks.open + subtasks.closed %>)
+              <% } %>
+              <a href="<%= html_url %>">
+                #<%= number %>
+              </a>
+          </strong>
+          <small>
+            <%= markdownToHTML(body) %>
+            <a class="btn btn-default btn-xs" href="<%= html_url %>">
+              open on GitHub
+            </a>
+          </small>
+      </td>
+  </tr>
+</script>
+
+<script id="progress-bar" type="text/template">
+<div title="<%= total %>" class="progress-group <% if (preceding > 50) { %>over50percent<% } %>" style="width: <%= total %>%;">
+  <div class="progress-bar" style="width: <%= closedPercent %>%"></div>
+  <div class="progress-bar progress-bar-striped active" style="width: <%= activePercent %>%"></div>
+  <div class="progress-bar progress-bar-danger" style="width: <%= unratedPercent %>%"></div>
+  <div class="progress-bar invisible" style="width: <%= openPercent %>%;"></div>
+  <div class="progress-group-label"><%= title %></div>
+</div>
+</script>
+
   <script src="vendor/jquery/dist/jquery.js"></script>
   <script src="vendor/underscore/underscore.js"></script>
   <script src="vendor/initials/initials.js"></script>
   <script src="vendor/markdown/lib/markdown.js"></script>
+  <script src="vendor/angular/angular.js"></script>
   <script src="js/github.js"></script>
   <script src="js/app.js"></script>
 </body>
