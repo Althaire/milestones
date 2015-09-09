@@ -10,7 +10,7 @@
 
   //declarations of functions, still not sure if I need these or not
   var rowTemplate = $("#row-template");
-  var progressTemplate = $(#"#progress-bar");
+  var progressTemplate = $("#progress-bar");
 
  // gonna move this closer to where it's actually used
   var stateMap = {
@@ -164,11 +164,12 @@
     renderTasks(milestones);
   }
 
-// the chart at the top of the page - will reduce responsabilities
+// the chart at the top of the page - will reduce responsibilities
   function renderChart(milestones) {
     var currentTotal = 0;
     var allTotal;
     var html;
+
     milestones = milestones.map(function(milestone) {
       milestone.total = milestone.effort.total;
       milestone.closedPercent = parseInt(milestone.effort.closed / milestone.total * 100, 10);
@@ -177,9 +178,11 @@
       milestone.openPercent = parseInt(milestone.effort.open / milestone.total * 100, 10);
       return milestone;
     });
+
     allTotal = milestones.reduce(function(allTotal, milestone) {
       return allTotal + milestone.total;
     }, 0);
+
     html = milestones.map(function(milestone) {
       milestone.total = milestone.total / allTotal * 100;
       currentTotal += milestone.total;
@@ -187,6 +190,7 @@
       return _.template(progressTemplate, _.extend({}, milestone, {
         preceding: currentTotal - milestone.total
       }));
+      debugger
     }).join('\n');
 
 
@@ -291,7 +295,7 @@
       htmlLines = htmlLines.concat(milestoneHtmlLines);
     });
     $('tbody').html(htmlLines.join('\n'));
-  }
+  } debugger
 
   function handleError (error) {
     // window.alert('an error occured: ' + error);
