@@ -8,7 +8,7 @@
   var repoUsername = repoUrl.match(/github.com\/([^\/]+)/).pop();
   var repoName = repoUrl.match(/github.com\/[^\/]+\/([^\/]+)/).pop();
 
-  //declarations of functions, still not sure if I need these or not
+  //links up these variables with the templates temporarily in index.html
   var rowTemplate = $("#row-template");
   var progressTemplate = $("#progress-bar");
 
@@ -27,13 +27,16 @@
     } catch(e) {}
   };
 
+  // no clue what this does
   cache('issues', githubApi.user(repoUsername).repo(repoName).issues.findAll)
   .progress(handleResponse)
   .done(handleResponse)
   .fail(handleError);
 
+  // enables click to display sub tasks for each task?
   $(document.body).on('click', 'th.milestone, td.task', toggleDescriptionInTaskCell);
 
+  // STORAGE!
   function cache (name, method) {
     var data;
     var defer = $.Deferred();
@@ -62,6 +65,8 @@
     return defer.promise();
   }
 
+
+//this function is HUGE and has too many responsibilities - have to go line by line to see what each responsibility does and seperate them
   function handleResponse (issues) {
     var milestones = [];
     var owners = {};
@@ -300,6 +305,7 @@
     $('tbody').html(htmlLines.join('\n'));
   }
 
+// will leave this
   function handleError (error) {
     // window.alert('an error occured: ' + error);
     window.console.log(error);
@@ -344,7 +350,7 @@
 
     numSubTasksOpen = (text.match(/(^|\n)- \[\s+\]/g) || []).length;
     numSubTasksClosed = (text.match(/(^|\n)- \[x]/gi) || []).length;
-
+// ^ WAT.
     total = numSubTasksOpen + numSubTasksClosed;
     if (numSubTasksClosed === total) return;
 
