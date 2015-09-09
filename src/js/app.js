@@ -190,7 +190,7 @@
       return _.template(progressTemplate, _.extend({}, milestone, {
         preceding: currentTotal - milestone.total
       }));
-      debugger
+
     }).join('\n');
 
 
@@ -247,6 +247,8 @@
     $('.chart').append('<div class="bottom-labels">' + bottomLabelsHtml + '</div>');
 
     // total summary
+    // probably change the names to counters because closed may sounds like it "isClosed"
+    // move lines 16-20 here
     var summaryHtml = '';
     var totalEfforts = milestones.reduce(function(summary, milestone) {
       summary.closed += milestone.effort.closed;
@@ -266,6 +268,7 @@
     });
     totalEfforts.milestones = milestones.length;
 
+// move to index and later own separate templates file
     summaryHtml += '<div class="summary">\n';
     summaryHtml += '  <strong>'+totalEfforts.milestones+'</strong> milestones,\n';
     summaryHtml += '  <strong>'+totalEfforts.issues+'</strong> tasks,\n';
@@ -278,7 +281,7 @@
     $('.chart').append(summaryHtml);
   }
 
-
+// renders "main" tasks in the template for each milestone
   function renderTasks(milestones) {
     var htmlLines = [];
     milestones.forEach(function(milestone) {
@@ -295,13 +298,14 @@
       htmlLines = htmlLines.concat(milestoneHtmlLines);
     });
     $('tbody').html(htmlLines.join('\n'));
-  } debugger
+  }
 
   function handleError (error) {
     // window.alert('an error occured: ' + error);
     window.console.log(error);
   }
 
+// gets issue state - this is pretty perfect and nice and short, will probably leave it as it is.
   function getIssueState (issue) {
     var state;
     var isActive;
@@ -315,6 +319,9 @@
     return state;
   }
 
+// what are all these reduce functions doing??
+// going through all the issues and checking whether it's active and then...
+// putting these results together... ?
   function getIssueEffort (issue) {
     var effort;
     effort = issue.labels.reduce(function(effort, label) {
@@ -347,6 +354,8 @@
     };
   }
 
+// sorts milestones by whether their status
+// not clear about update?
   function sortByStateAndUpdateAt (a, b) {
     if (stateMap[a.state] < stateMap[b.state]) return 1;
     if (stateMap[a.state] > stateMap[b.state]) return -1;
@@ -355,6 +364,8 @@
 
     return 0;
   }
+
+  // puts the milestones in order by number, will probably rename A and B to something more descriptive
   function sortByNr (a, b) {
     if (a.nr > b.nr) return 1;
     if (a.nr < b.nr) return -1;
